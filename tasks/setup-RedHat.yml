@@ -2,8 +2,9 @@
 # RHEL/Rocky/CentOS installation of gitlab-runner using official package script
 
 - name: Ensure curl is present (used to add GitLab Runner repo)
-  ansible.builtin.package:
+  ansible.builtin.dnf:
     name: curl
+    allowerasing: true
     state: present
 
 - name: Add GitLab Runner yum repository (official script)
@@ -13,7 +14,7 @@
   register: add_repo
 
 - name: Install gitlab-runner package
-  ansible.builtin.package:
+  ansible.builtin.dnf:
     name: "gitlab-runner{{ ('-' + gitlab_runner_version) if gitlab_runner_version else '' }}"
     state: present
 
