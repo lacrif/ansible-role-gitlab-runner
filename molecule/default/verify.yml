@@ -28,4 +28,4 @@
     - name: Assert service is running
       assert:
         that:
-          - "(ansible_facts.services['gitlab-runner.service'] is defined and ansible_facts.services['gitlab-runner.service'].state == 'running') or (ansible_facts.services['gitlab-runner.service'] is defined and ansible_facts.services['gitlab-runner.service'].state == 'started')"
+          - "ansible_facts.services['gitlab-runner.service'] is defined and ansible_facts.services['gitlab-runner.service'].state == 'running'"

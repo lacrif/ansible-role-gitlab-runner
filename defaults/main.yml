@@ -23,4 +23,3 @@ gitlab_runner_yum_repo: "https://packages.gitlab.com/install/repositories/runner
 
 # Service name (package provides this)
 gitlab_runner_service_name: gitlab-runner
- 

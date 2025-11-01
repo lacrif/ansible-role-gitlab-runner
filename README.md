@@ -76,15 +76,13 @@ Exécuter les tests Molecule :
 molecule test
 ```
 
-Ou exécuter étapes séparées :
+Pour changer le système d'exploitation
 
 ```bash
-molecule converge -s default
-molecule verify -s default
-molecule destroy -s default
+export MOLECULE_DISTRO_NAME=rockylinux && export MOLECULE_DISTRO_VERSION=9 && molecule test
+export MOLECULE_DISTRO_NAME=ubuntu && export MOLECULE_DISTRO_VERSION=noble && molecule test
+export MOLECULE_DISTRO_NAME=debian && export MOLECULE_DISTRO_VERSION=trixie && molecule test
 ```
-
-Notes : le scénario Molecule vérifie l'installation du paquet, la présence binaire et de l'utilisateur, et le status du service. Il n'effectue pas l'enregistrement du runner contre une instance GitLab.
 
 ## Limitations et améliorations possibles
 

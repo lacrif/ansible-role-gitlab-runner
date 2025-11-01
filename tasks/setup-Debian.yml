@@ -11,24 +11,23 @@
   args:
     creates: /etc/apt/sources.list.d/runner_gitlab-runner.list
   register: add_repo
-  changed_when: add_repo.rc == 0 and add_repo.stdout != ''
   notify: Update apt cache
 
 - name: Install gitlab-runner package
   ansible.builtin.apt:
     name: "gitlab-runner{{ ('=' + gitlab_runner_version) if gitlab_runner_version else '' }}"
     state: present
-    allow_downgrade: yes
+    allow_downgrade: true
 
 - name: Ensure gitlab-runner user exists
   ansible.builtin.user:
     name: gitlab-runner
-    system: yes
-    create_home: no
+    system: true
+    create_home: false
 
 - name: Ensure gitlab-runner service is enabled and started
   ansible.builtin.service:
     name: "{{ gitlab_runner_service_name }}"
     state: started
-    enabled: yes
+    enabled: true
   notify: Restart gitlab-runner

@@ -20,6 +20,7 @@ Voici des instructions destinées à l'agent Copilot pour travailler sur ce dép
 
 ## Pratiques recommandées
 
+- Idempotence : écrire des tâches idempotentes et vérifier que state: present/absent ou creates/removes sont utilisés lorsque c'est pertinent.
 - Sécurité : éviter d'exposer des secrets dans le dépôt. Si une tâche a besoin d'un secret, documenter clairement comment fournir la valeur via Vault, variables d'environnement, ou inventory.
 - Tests : utiliser Molecule (scénarios dans `molecule/default/`) et ajouter/mettre à jour `converge.yml` et `verify.yml` quand on change le rôle. Fournir une simple commande pour exécuter Molecule localement.
 
@@ -50,7 +51,7 @@ Voici des instructions destinées à l'agent Copilot pour travailler sur ce dép
 ## Tests recommandés
 
 - Exécuter molecule : `molecule test`
-- Linter YAML/Ansible : `ansible-lint .` et `yamllint .` si disponibles
+- Linter YAML/Ansible : `ansible-lint .` et `yamllint .`
 
 ## Notes finales
 
