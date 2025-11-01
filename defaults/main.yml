@@ -1,0 +1,26 @@
+---
+# Default variables for ansible-role-gitlab-runner
+# Documented and safe defaults. Do not put secrets here; use Vault or inventory vars.
+
+# Version of gitlab-runner package to install (empty = latest)
+gitlab_runner_version: ""
+
+# Whether to register the runner automatically (requires token)
+gitlab_runner_register: false
+
+# Registration token (do NOT store in VCS). Provide via Vault or extra-vars when needed.
+gitlab_runner_registration_token: ""
+
+# GitLab instance URL used during registration
+gitlab_runner_registration_url: "https://gitlab.com/"
+
+# Executor to configure when registering (shell, docker, docker+machine, kubernetes, etc.)
+gitlab_runner_executor: "shell"
+
+# Additional apt/yum options
+gitlab_runner_apt_repo: "https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.deb.sh"
+gitlab_runner_yum_repo: "https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.rpm.sh"
+
+# Service name (package provides this)
+gitlab_runner_service_name: gitlab-runner
+ 

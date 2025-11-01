@@ -1,0 +1,11 @@
+---
+# Main entrypoint for the role. Includes platform-specific setup files.
+
+- name: Include Debian/Ubuntu tasks
+  ansible.builtin.include_tasks: setup-Debian.yml
+  when: ansible_facts.os_family == 'Debian'
+
+- name: Include RedHat/Rocky tasks
+  ansible.builtin.include_tasks: setup-RedHat.yml
+  when: ansible_facts.os_family == 'RedHat'
+ 

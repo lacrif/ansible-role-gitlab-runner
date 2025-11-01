@@ -1,0 +1,31 @@
+---
+- name: Verify Role
+  hosts: all
+  tasks:
+    - name: Check gitlab-runner binary is present
+      ansible.builtin.command: which gitlab-runner
+      register: runner_bin
+      changed_when: false
+
+    - name: Assert gitlab-runner binary exists
+      assert:
+        that:
+          - runner_bin.rc == 0
+
+    - name: Check gitlab-runner user exists
+      ansible.builtin.command: id -u gitlab-runner
+      register: runner_user
+      changed_when: false
+
+    - name: Assert gitlab-runner user exists
+      assert:
+        that:
+          - runner_user.rc == 0
+
+    - name: Check gitlab-runner service is enabled and running
+      ansible.builtin.service_facts: {}
+
+    - name: Assert service is running
+      assert:
+        that:
+          - "(ansible_facts.services['gitlab-runner.service'] is defined and ansible_facts.services['gitlab-runner.service'].state == 'running') or (ansible_facts.services['gitlab-runner.service'] is defined and ansible_facts.services['gitlab-runner.service'].state == 'started')"

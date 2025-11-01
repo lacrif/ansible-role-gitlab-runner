@@ -1,0 +1,69 @@
+---
+name: 'CI'
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '10 2 3,17 * *'
+
+defaults:
+  run:
+    working-directory: 'lacrif.template'
+
+jobs:
+
+  lint:
+    name: 'Lint'
+    runs-on: 'ubuntu-latest'
+    steps:
+      - name: 'Check out the codebase'
+        uses: 'actions/checkout@v4'
+        with:
+          path: 'lacrif.template'
+
+      - name: 'Set up Python 3'
+        uses: 'actions/setup-python@v5'
+        with:
+          python-version: '3.x'
+
+      - name: 'Install test dependencies'
+        run: 'pip3 install yamllint'
+
+      - name: 'Lint code'
+        run: |
+          yamllint .
+
+  molecule:
+    name: 'Molecule'
+    runs-on: 'ubuntu-latest'
+    strategy:
+      matrix:
+        include:
+          - distro_name: 'rockylinux'
+            distro_version: '9'
+          - distro_name: 'ubuntu'
+            distro_version: 'noble'
+          - distro_name: 'debian'
+            distro_version: 'trixie'
+
+    steps:
+      - name: 'Check out the codebase'
+        uses: 'actions/checkout@v4'
+        with:
+          path: 'lacrif.template'
+
+      - name: 'Set up Python 3'
+        uses: 'actions/setup-python@v5'
+        with:
+          python-version: '3.x'
+
+      - name: 'Install test dependencies'
+        run: 'pip3 install ansible~=11.0 molecule molecule-plugins[docker] docker'
+
+      - name: 'Run Molecule tests'
+        run: 'molecule test'
+        env:
+          PY_COLORS: '1'
+          ANSIBLE_FORCE_COLOR: '1'
+          MOLECULE_DISTRO_NAME: ${{ matrix.distro_name }}
+          MOLECULE_DISTRO_VERSION: ${{ matrix.distro_version }}

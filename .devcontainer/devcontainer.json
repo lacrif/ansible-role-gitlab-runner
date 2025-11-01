@@ -1,0 +1,4 @@
+{
+  "name": "Ansible Collection Development",
+  "image": "lacrif/ansible-devcontainer:11"
+}

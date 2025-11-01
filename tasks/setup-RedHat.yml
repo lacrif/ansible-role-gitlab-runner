@@ -1,0 +1,32 @@
+---
+# RHEL/Rocky/CentOS installation of gitlab-runner using official package script
+
+- name: Ensure curl is present (used to add GitLab Runner repo)
+  ansible.builtin.package:
+    name: curl
+    state: present
+
+- name: Add GitLab Runner yum repository (official script)
+  ansible.builtin.command: "bash -c 'curl -fsSL {{ gitlab_runner_yum_repo }} | bash'"
+  args:
+    creates: /etc/yum.repos.d/runner_gitlab-runner.repo
+  register: add_repo
+  changed_when: add_repo.rc == 0 and add_repo.stdout != ''
+
+- name: Install gitlab-runner package
+  ansible.builtin.package:
+    name: "gitlab-runner{{ ('-' + gitlab_runner_version) if gitlab_runner_version else '' }}"
+    state: present
+
+- name: Ensure gitlab-runner user exists
+  ansible.builtin.user:
+    name: gitlab-runner
+    system: yes
+    create_home: no
+
+- name: Ensure gitlab-runner service is enabled and started
+  ansible.builtin.service:
+    name: "{{ gitlab_runner_service_name }}"
+    state: started
+    enabled: yes
+  notify: Restart gitlab-runner

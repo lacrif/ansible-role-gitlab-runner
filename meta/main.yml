@@ -1,0 +1,24 @@
+---
+dependencies: []
+
+galaxy_info:
+  role_name: gitlab_runner
+  author: lacrif
+  description: "Ansible role to install and configure GitLab Runner on Debian/Ubuntu and RedHat/Rocky systems."
+  company: "Lacrif"
+  license: "license (BSD, MIT)"
+  min_ansible_version: 2.15.1
+  platforms:
+    - name: Debian
+      versions:
+        - trixie
+    - name: Ubuntu
+      versions:
+        - noble
+    - name: Rocky
+      versions:
+        - "9.0"
+  galaxy_tags:
+    - gitlab
+    - runner
+    - ci
