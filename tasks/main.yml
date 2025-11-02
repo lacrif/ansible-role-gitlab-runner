@@ -8,3 +8,13 @@
 - name: Include RedHat/Rocky tasks
   ansible.builtin.include_tasks: setup-RedHat.yml
   when: ansible_facts.os_family == 'RedHat'
+
+- name: Deploy GitLab Runner configuration file
+  ansible.builtin.template:
+    src: config.toml.j2
+    dest: /etc/gitlab-runner/config.toml
+    owner: root
+    group: root
+    mode: '0600'
+  when: gitlab_runner_manage_config | bool
+  notify: Restart gitlab-runner

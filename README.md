@@ -19,6 +19,8 @@ Ce dépôt contient :
 
 ## Variables principales (voir `defaults/main.yml`)
 
+### Installation et enregistrement
+
 - `gitlab_runner_version` : Version du paquet ("" = dernière disponible).
 - `gitlab_runner_register` : Booléen. Si `true`, active l'étape d'enregistrement (désactivée par défaut).
 - `gitlab_runner_registration_token` : Token d'enregistrement (NE PAS COMMITTER).
@@ -27,7 +29,41 @@ Ce dépôt contient :
 - `gitlab_runner_apt_repo` / `gitlab_runner_yum_repo` : URLs des scripts officiels d'ajout des dépôts.
 - `gitlab_runner_service_name` : Nom du service (`gitlab-runner`).
 
-Ne stockez jamais `gitlab_runner_registration_token` en clair dans le dépôt. Utilisez :
+### Gestion du fichier de configuration
+
+- `gitlab_runner_manage_config` : Booléen. Si `true`, gère le fichier `/etc/gitlab-runner/config.toml` via template (par défaut `false`).
+- `gitlab_runner_concurrent` : Nombre de jobs concurrents (par défaut `1`).
+- `gitlab_runner_check_interval` : Fréquence de vérification de nouveaux jobs en secondes (par défaut `0`).
+- `gitlab_runner_log_level` : Niveau de logs: `debug`, `info`, `warn`, `error`, `fatal`, `panic` (par défaut `info`).
+- `gitlab_runner_log_format` : Format des logs: `runner`, `text`, `json` (par défaut `runner`).
+- `gitlab_runner_shutdown_timeout` : Délai de fermeture gracieuse en secondes (par défaut `0`).
+- `gitlab_runner_runners` : Liste des runners à configurer (par défaut `[]`).
+
+Exemple de configuration d'un runner :
+
+```yaml
+gitlab_runner_runners:
+  - name: "my-shell-runner"
+    url: "https://gitlab.com/"
+    token: "RUNNER_TOKEN"
+    executor: "shell"
+    description: "Shell executor runner"
+    tag_list: ["shell", "linux"]
+    run_untagged: true
+    locked: false
+  - name: "my-docker-runner"
+    url: "https://gitlab.com/"
+    token: "RUNNER_TOKEN_2"
+    executor: "docker"
+    description: "Docker executor runner"
+    tag_list: ["docker"]
+    docker:
+      image: "alpine:latest"
+      privileged: false
+      volumes: ["/cache"]
+```
+
+Ne stockez jamais `gitlab_runner_registration_token` ou les tokens des runners en clair dans le dépôt. Utilisez :
 
 - Ansible Vault
 - Variables d'inventaire chiffrées
@@ -35,7 +71,9 @@ Ne stockez jamais `gitlab_runner_registration_token` en clair dans le dépôt. U
 
 ## Utilisation
 
-Exemple d'utilisation dans un playbook :
+### Exemple d'utilisation basique
+
+Installer GitLab Runner sans configuration du fichier config.toml :
 
 ```yaml
 - name: Install GitLab Runner
@@ -44,6 +82,38 @@ Exemple d'utilisation dans un playbook :
   vars:
     # By default registration is disabled; set to true and provide a token to register
     gitlab_runner_register: false
+  roles:
+    - lacrif.gitlab_runner
+```
+
+### Exemple avec gestion du fichier de configuration
+
+Installer et configurer GitLab Runner avec gestion du fichier config.toml :
+
+```yaml
+- name: Install and configure GitLab Runner
+  hosts: runners
+  become: true
+  vars:
+    gitlab_runner_manage_config: true
+    gitlab_runner_concurrent: 4
+    gitlab_runner_log_level: "info"
+    gitlab_runner_runners:
+      - name: "production-shell-runner"
+        url: "https://gitlab.example.com/"
+        token: "{{ vault_runner_token_1 }}"
+        executor: "shell"
+        tag_list: ["shell", "production"]
+        run_untagged: false
+      - name: "docker-runner"
+        url: "https://gitlab.example.com/"
+        token: "{{ vault_runner_token_2 }}"
+        executor: "docker"
+        tag_list: ["docker"]
+        docker:
+          image: "alpine:latest"
+          privileged: false
+          volumes: ["/var/run/docker.sock:/var/run/docker.sock", "/cache"]
   roles:
     - lacrif.gitlab_runner
 ```
