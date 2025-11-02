@@ -1,6 +1,7 @@
 # Rôle Ansible: Gitlab Runner
 
-[![CI](https://github.com/lacrif/ansible-role-temaplate/actions/workflows/ci.yml/badge.svg)](https://github.com/lacrif/ansible-role-template/actions/workflows/ci.yml)
+[![CI](https://github.com/lacrif/ansible-role-gitlab-runner/actions/workflows/ci.yml/badge.svg)](https://github.com/lacrif/ansible-role-template/actions/workflows/ci.yml)
+[![Release](https://github.com/lacrif/ansible-role-gitlab-runner/actions/workflows/release.yml/badge.svg)](https://github.com/lacrif/ansible-role-template/actions/workflows/release.yml)
 
 Rôle Ansible minimal pour installer et configurer GitLab Runner sur
 Debian/Ubuntu et RHEL/Rocky.
