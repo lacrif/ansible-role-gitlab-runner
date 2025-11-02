@@ -1,15 +1,16 @@
 ---
-- name: Converge
+- name: Converge with config management
   hosts: all
-  # don't escalate in molecule containers that may not have sudo
 
   pre_tasks:
     - name: Update apt cache.
-      apt: update_cache=yes cache_valid_time=600
+      ansible.builtin.apt:
+        update_cache: true
+        cache_valid_time: 600
       when: ansible_facts.os_family == 'Debian'
 
-    - name: Wait for systemd to complete initialization.  # noqa 303
-      command: systemctl is-system-running
+    - name: Wait for systemd to complete initialization.  # noqa command-instead-of-module
+      ansible.builtin.command: systemctl is-system-running
       register: systemctl_status
       until: >
         'running' in systemctl_status.stdout or
@@ -21,4 +22,28 @@
       failed_when: systemctl_status.rc > 1
 
   roles:
-    - lacrif.gitlab_runner
+    - role: lacrif.gitlab_runner
+      vars:
+        gitlab_runner_manage_config: true
+        gitlab_runner_concurrent: 2
+        gitlab_runner_check_interval: 3
+        gitlab_runner_log_level: "debug"
+        gitlab_runner_runners:
+          - name: "test-shell-runner"
+            url: "https://gitlab.com/"
+            token: "test-token-shell"
+            executor: "shell"
+            description: "Test shell runner for Molecule"
+            tag_list: ["shell", "test"]
+            run_untagged: true
+            locked: false
+          - name: "test-docker-runner"
+            url: "https://gitlab.com/"
+            token: "test-token-docker"
+            executor: "docker"
+            description: "Test docker runner for Molecule"
+            tag_list: ["docker", "test"]
+            docker:
+              image: "alpine:latest"
+              privileged: false
+              volumes: ["/cache"]

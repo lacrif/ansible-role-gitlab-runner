@@ -23,7 +23,7 @@ shutdown_timeout = {{ gitlab_runner_shutdown_timeout }}
   description = "{{ runner.description }}"
 {% endif %}
 {% if runner.tag_list is defined %}
-  tag_list = [{{ runner.tag_list | map('quote') | join(', ') }}]
+  tag_list = [{{ runner.tag_list | map('to_json') | join(', ') }}]
 {% endif %}
 {% if runner.run_untagged is defined %}
   run_untagged = {{ runner.run_untagged | lower }}
@@ -40,7 +40,7 @@ shutdown_timeout = {{ gitlab_runner_shutdown_timeout }}
     privileged = {{ runner.docker.privileged | lower }}
 {% endif %}
 {% if runner.docker.volumes is defined %}
-    volumes = [{{ runner.docker.volumes | map('quote') | join(', ') }}]
+    volumes = [{{ runner.docker.volumes | map('to_json') | join(', ') }}]
 {% endif %}
 {% if runner.docker.network_mode is defined %}
     network_mode = "{{ runner.docker.network_mode }}"

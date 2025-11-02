@@ -113,6 +113,7 @@ Ce dépôt contient un rôle Ansible destiné à installer et configurer un temp
     - `lacrif/rockylinux-systemd:9` pour Rocky Linux 9 avec systemd,
     - `lacrif/ubuntu-systemd:noble` pour Ubuntu 24.04 avec systemd,
     - `lacrif/debian-systemd:trixie` pour Debian 13 avec systemd.
+- Utiliser la collection Ansible `hpe.monkeyble` pour mocker des modules non compatibles avec le mode check.
 
 ## Notes finales
 
