@@ -1,61 +1,119 @@
 # Instructions
 
-Voici des instructions destinées à l'agent Copilot pour travailler sur ce dépôt "ansible-role-gitlab-runner".
+Voici des instructions destinées à l'agent Copilot pour travailler sur ce dépôt.
 
 ## Objectif
 
-- Aider à développer, corriger et documenter le rôle Ansible pour gitlab-runner.
+Aider à développer, corriger et documenter le rôle Ansible.
 
 ## Contexte du dépôt
 
-- Structure principale : `tasks/`, `defaults/`, `handlers/`, `vars/`, `molecule/`, `meta/`.
-- Ce dépôt contient un rôle Ansible destiné à installer et configurer un template et des scénarios Molecule pour tests locaux.
+Ce dépôt contient un rôle Ansible destiné à installer et configurer un template et des scénarios Molecule pour tests locaux.
+
+### Structure principale et conventions spécifiques
+
+- `.devcontainer/` : configuration pour les environnements de développement dans des conteneurs.
+- `.github/` : workflows GitHub Actions pour CI/CD, templates de PR/issue.
+- `defaults/` : valeurs par défaut des variables.
+- `handlers/` : handlers utilisés par le rôle.
+- `tasks/` : contient la logique principale du rôle.
+- `meta/` : métadonnées du rôle.
+- `molecule/` : scénarios de test Molecule.
+- `vars/` : variables spécifiques à la plateforme.
+
+### Fichiers et conventions spécifiques
+
+- `defaults/main.yml` : documenter chaque variable par un bref commentaire et fournir des valeurs par défaut raisonnables.
+- `handlers/main.yml` : définir les handlers utilisés par le rôle.
+- `meta/main.yml` : documenter les dépendances du rôle et les métadonnées.
+- `molecule/default/converge.yml` : scénario principal pour déployer le rôle dans un conteneur de test.
+- `molecule/default/molecule.yml` : configuration de Molecule, y compris les plateformes de test et les images Docker
+- `molecule/default/verify.yml` : assertions pour vérifier que le rôle a été appliqué correctement.
+- `tasks/main.yml` : point d'entrée principal, inclure des fichiers spécifiques à la plateforme si nécessaire.
+- `vars/main.yml` : définir des variables spécifiques à la plateforme si nécessaire.
+- `.ansible-lint` : règles personnalisées pour ansible-lint.
+- `.yamllint` : configuration pour yamllint.
+- `.gitignore` : ignorer les fichiers temporaires, logs, et autres artefacts non pertinents.
+- `CHANGELOG.md` : tenir à jour avec les changements significatifs, corrections de bugs et nouvelles fonctionnalités.
+- `CODE_OF_CONDUCT.md` : code de conduite pour les contributeurs.
+- `CONTRIBUTING.md` : lignes directrices pour contribuer au dépôt.
+- `LICENSE` : inclure une licence open source appropriée (ex: MIT, Apache 2.0).
+- `README.md` : documenter l'objectif du rôle, les variables configurables, les exemples d'utilisation et les instructions de test.
+- `SECURITY.md` : instructions pour signaler des vulnérabilités de sécurité.
 
 ## Règles générales
 
 - Répondre en français.
-- Proposer des modifications minimales et ciblées : petits commits, changement explicite des fichiers, respecter le style YAML/Ansible existant.
-- Avant toute modification significative, lister les fichiers à changer et expliquer brièvement pourquoi.
-- Respecter les conventions Ansible : utiliser `defaults/main.yml` pour valeurs par défaut, `vars/` pour variables liées à la plateforme, `tasks/` pour logique, `handlers/` pour handlers.
-
-## Pratiques recommandées
-
+- Prioriser la clarté et la maintenabilité. Préfère des changements incrémentaux testés.
+- Si tu rencontres des parties ambiguës du rôle, propose deux options de correction avec leurs avantages/inconvénients.
+- Respecter le style YAML/Ansible existant.
+- Respecter les conventions Ansible et les meilleures pratiques (idempotence, gestion des erreurs, etc.).
 - Idempotence : écrire des tâches idempotentes et vérifier que state: present/absent ou creates/removes sont utilisés lorsque c'est pertinent.
-- Sécurité : éviter d'exposer des secrets dans le dépôt. Si une tâche a besoin d'un secret, documenter clairement comment fournir la valeur via Vault, variables d'environnement, ou inventory.
-- Tests : utiliser Molecule (scénarios dans `molecule/default/`) et ajouter/mettre à jour `converge.yml` et `verify.yml` quand on change le rôle. Fournir une simple commande pour exécuter Molecule localement.
+- Performance : éviter les boucles inutiles et optimiser les tâches pour réduire le temps d'exécution.
+- Effectuer des tests locaux avant de proposer des modifications.
 
 ## Compatibilité multi-plateforme
 
-- Ne générer que pour les plateformes : rockylinux 9, ubuntu noble et debian trixie
-- multi-plateforme : si une tâche dépend d'une distribution, isoler la logique dans `tasks/setup-<Distro>.yml` et conditionner l'inclusion via `ansible_os_family` ou `ansible_distribution`.
+- Générer pour les plateformes : rockylinux 9, ubuntu noble et debian trixie
+- Si une tâche dépend d'une distribution, isoler la logique dans `tasks/setup-<Distro>.yml` et conditionner l'inclusion via `ansible_os_family` ou `ansible_distribution`.
+- Les images utilisées dans `molecule/default/molecule.yml` doivent refléter les plateformes supportées.
 
-## Fichiers et conventions spécifiques
+## Conventions de commit
 
-- `tasks/main.yml` : inclure les fichiers `setup-RedHat.yml`, `setup-Debian.yml`, selon la plateforme. Ne pas dupliquer la logique.
-- `defaults/main.yml` : documenter chaque variable par un bref commentaire et fournir des valeurs par défaut raisonnables.
-- `molecule/` : s'assurer que `molecule.yml` et `converge.yml` sont cohérents; Si tu modifies des handlers ou des services, adapte les tests de vérification (`verify.yml`).
+- Utiliser des messages de commit clairs et descriptifs.
+- Préfixer les messages de commit avec le type de changement (fix, feat, docs, style, refactor, test, chore).
+- Inclure des références aux issues ou PRs pertinentes dans les messages de commit.
 
-## Lorsque tu proposes un correctif ou une nouvelle fonctionnalité
-
-- Fournir un court résumé (2-4 lignes) expliquant le problème et la solution.
-- Montrer les fichiers modifiés et un extrait des changements clés (bloc YAML/Ansible) dans la PR description.
-- Ajouter ou mettre à jour des tests Molecule basiques (vérification d'un service, présence d'un binaire, groupe d'utilisateurs, etc.).
-- Expliquer comment exécuter les tests localement (commande Molecule) et noter toute dépendance ou prérequis.
-
-## Comportement attendu pour les réponses de l'agent
+## Correctif ou une nouvelle fonctionnalité
 
 - Fournir directement les modifications de fichiers sous forme de patchs ou d'édits (si intégré au repo), pas seulement des instructions textuelles.
 - Avant d'appliquer un patch qui change plus de 3 fichiers, lister les fichiers concernés et demander confirmation.
-- Après modification, exécuter (ou indiquer comment exécuter) les tests Molecule pertinents et fournir les résultats ou les commandes nécessaires.
+- Proposer des modifications minimales et ciblées : petits commits, changement explicite des fichiers
+- Fournir un court résumé (2-4 lignes) expliquant le problème et la solution.
+- Montrer les fichiers modifiés et un extrait des changements clés (bloc YAML/Ansible) dans la PR description.
 
-## Tests recommandés
+## Documentation
 
-- Exécuter molecule : `molecule test`
-- Linter YAML/Ansible : `ansible-lint .` et `yamllint .`
+- Mettre à jour `README.md` et autres documents pertinents pour refléter les changements.
+- Chaque variable doit être documentée avec un commentaire expliquant son usage.
+
+## Gestion des versions
+
+- Suivre le versionnage sémantique dans `CHANGELOG.md` et les tags Git.
+- Mettre à jour le changelog pour chaque version avec les changements majeurs, mineurs et corrections de bugs.
+- Documenter les nouvelles fonctionnalités, corrections de bugs et changements importants dans le changelog.
+
+## Logging et débogage
+
+- Gestion des erreurs : inclure des vérifications et des messages d'erreur utiles.
+- Logging : utiliser le module debug pour fournir des informations utiles lors de l'exécution.
+
+## Qualité du code 
+
+- Lisibilité : utiliser des noms de variables et de tâches clairs et descriptifs.
+- Modularité : diviser les tâches complexes en sous-tâches dans des fichiers séparés si nécessaire.
+- Exécuter `ansible-lint .` pour vérifier la syntaxe et les bonnes pratiques Ansible.
+- Exécuter `yamllint .` pour vérifier la syntaxe YAML.
+
+## Sécurité
+
+- Eviter d'exposer des secrets dans le dépôt. 
+- Si une tâche a besoin d'un secret, documenter clairement comment fournir la valeur via Vault, variables d'environnement, ou inventory.
+
+## Tests
+
+- Exécuter molecule : `molecule test` pour valider les modifications.
+- Génnérer des tests Molecule basiques (vérification d'un service, présence d'un binaire, groupe d'utilisateurs, etc.).
+- Expliquer comment exécuter les tests Molecule.
+- Noter toute dépendance ou prérequis.
+- S'assurer que `molecule.yml` et `converge.yml` sont cohérents.
+- Si tu modifies des handlers ou des services, adapte les tests de vérification dans `verify.yml`.
+- Vérifier que les images Docker dans `molecule/default/molecule.yml` correspondent aux plateformes supportées.
+- Utiliser des images personnalisés :
+    - `lacrif/rockylinux-systemd:9` pour Rocky Linux 9 avec systemd,
+    - `lacrif/ubuntu-systemd:noble` pour Ubuntu 24.04 avec systemd,
+    - `lacrif/debian-systemd:trixie` pour Debian 13 avec systemd.
 
 ## Notes finales
-
-- Prioriser la clarté et la maintenabilité. Préfère des changements incrémentaux testés.
-- Si tu rencontres des parties ambiguës du rôle, propose deux options de correction avec leurs avantages/inconvénients.
 
 Merci de respecter ces consignes chaque fois que tu contribues au dépôt.
