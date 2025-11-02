@@ -29,3 +29,16 @@
       assert:
         that:
           - "ansible_facts.services['gitlab-runner.service'] is defined and ansible_facts.services['gitlab-runner.service'].state == 'running'"
+
+    - name: Check if config.toml exists when manage_config is enabled
+      ansible.builtin.stat:
+        path: /etc/gitlab-runner/config.toml
+      register: config_file
+      when: gitlab_runner_manage_config | default(false) | bool
+
+    - name: Assert config.toml exists when managed
+      assert:
+        that:
+          - config_file.stat.exists
+          - config_file.stat.mode == '0600'
+      when: gitlab_runner_manage_config | default(false) | bool

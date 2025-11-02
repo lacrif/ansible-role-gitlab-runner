@@ -1,0 +1,80 @@
+# {{ ansible_managed }}
+# GitLab Runner configuration file
+# See https://docs.gitlab.com/runner/configuration/advanced-configuration.html
+
+concurrent = {{ gitlab_runner_concurrent }}
+check_interval = {{ gitlab_runner_check_interval }}
+log_level = "{{ gitlab_runner_log_level }}"
+log_format = "{{ gitlab_runner_log_format }}"
+{% if gitlab_runner_shutdown_timeout > 0 %}
+shutdown_timeout = {{ gitlab_runner_shutdown_timeout }}
+{% endif %}
+
+[session_server]
+  session_timeout = 1800
+
+{% for runner in gitlab_runner_runners %}
+[[runners]]
+  name = "{{ runner.name }}"
+  url = "{{ runner.url }}"
+  token = "{{ runner.token }}"
+  executor = "{{ runner.executor }}"
+{% if runner.description is defined %}
+  description = "{{ runner.description }}"
+{% endif %}
+{% if runner.tag_list is defined %}
+  tag_list = [{{ runner.tag_list | map('quote') | join(', ') }}]
+{% endif %}
+{% if runner.run_untagged is defined %}
+  run_untagged = {{ runner.run_untagged | lower }}
+{% endif %}
+{% if runner.locked is defined %}
+  locked = {{ runner.locked | lower }}
+{% endif %}
+{% if runner.executor == "docker" and runner.docker is defined %}
+  [runners.docker]
+{% if runner.docker.image is defined %}
+    image = "{{ runner.docker.image }}"
+{% endif %}
+{% if runner.docker.privileged is defined %}
+    privileged = {{ runner.docker.privileged | lower }}
+{% endif %}
+{% if runner.docker.volumes is defined %}
+    volumes = [{{ runner.docker.volumes | map('quote') | join(', ') }}]
+{% endif %}
+{% if runner.docker.network_mode is defined %}
+    network_mode = "{{ runner.docker.network_mode }}"
+{% endif %}
+{% if runner.docker.pull_policy is defined %}
+    pull_policy = "{{ runner.docker.pull_policy }}"
+{% endif %}
+{% endif %}
+{% if runner.cache is defined %}
+  [runners.cache]
+{% if runner.cache.type is defined %}
+    Type = "{{ runner.cache.type }}"
+{% endif %}
+{% if runner.cache.path is defined %}
+    Path = "{{ runner.cache.path }}"
+{% endif %}
+{% if runner.cache.shared is defined %}
+    Shared = {{ runner.cache.shared | lower }}
+{% endif %}
+{% if runner.cache.s3 is defined %}
+    [runners.cache.s3]
+{% if runner.cache.s3.server_address is defined %}
+      ServerAddress = "{{ runner.cache.s3.server_address }}"
+{% endif %}
+{% if runner.cache.s3.access_key is defined %}
+      AccessKey = "{{ runner.cache.s3.access_key }}"
+{% endif %}
+{% if runner.cache.s3.secret_key is defined %}
+      SecretKey = "{{ runner.cache.s3.secret_key }}"
+{% endif %}
+{% if runner.cache.s3.bucket_name is defined %}
+      BucketName = "{{ runner.cache.s3.bucket_name }}"
+{% endif %}
+{% endif %}
+{% endif %}
+
+{% endfor %}

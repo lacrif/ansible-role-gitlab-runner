@@ -23,3 +23,28 @@ gitlab_runner_yum_repo: "https://packages.gitlab.com/install/repositories/runner
 
 # Service name (package provides this)
 gitlab_runner_service_name: gitlab-runner
+
+# Configuration file management
+# Set to true to manage /etc/gitlab-runner/config.toml via template
+gitlab_runner_manage_config: false
+
+# Global configuration options for config.toml
+gitlab_runner_concurrent: 1  # Number of concurrent jobs
+gitlab_runner_check_interval: 0  # How often to check GitLab for new jobs (seconds)
+gitlab_runner_log_level: "info"  # Log level: debug, info, warn, error, fatal, panic
+gitlab_runner_log_format: "runner"  # Log format: runner, text, json
+gitlab_runner_shutdown_timeout: 0  # Graceful shutdown timeout (seconds)
+
+# Runners configuration (list of runners to configure)
+# Each runner should have: name, url, token, executor, and optional executor-specific config
+# Example:
+# gitlab_runner_runners:
+#   - name: "my-runner"
+#     url: "https://gitlab.com/"
+#     token: "RUNNER_TOKEN"
+#     executor: "shell"
+#     description: "My GitLab Runner"
+#     tag_list: ["shell", "linux"]
+#     run_untagged: true
+#     locked: false
+gitlab_runner_runners: []
