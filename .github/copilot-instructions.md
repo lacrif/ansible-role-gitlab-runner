@@ -1,16 +1,16 @@
-# Instructions
+# INSTRUCTIONS POUR COPILOT
 
 Voici des instructions destinées à l'agent Copilot pour travailler sur ce dépôt.
 
-## Objectif
+## OBJECTIF DU RÔLE
 
 Aider à développer, corriger et documenter le rôle Ansible.
 
-## Contexte du dépôt
+## CONVENTIONS DU DÉPÔT
 
 Ce dépôt contient un rôle Ansible destiné à installer et configurer un template et des scénarios Molecule pour tests locaux.
 
-### Structure principale et conventions spécifiques
+### STRUCTURE DU DÉPÔT
 
 - `.devcontainer/` : configuration pour les environnements de développement dans des conteneurs.
 - `.github/` : workflows GitHub Actions pour CI/CD, templates de PR/issue.
@@ -21,7 +21,7 @@ Ce dépôt contient un rôle Ansible destiné à installer et configurer un temp
 - `molecule/` : scénarios de test Molecule.
 - `vars/` : variables spécifiques à la plateforme.
 
-### Fichiers et conventions spécifiques
+### FICHIERS CLÉS
 
 - `defaults/main.yml` : documenter chaque variable par un bref commentaire et fournir des valeurs par défaut raisonnables.
 - `handlers/main.yml` : définir les handlers utilisés par le rôle.
@@ -41,7 +41,7 @@ Ce dépôt contient un rôle Ansible destiné à installer et configurer un temp
 - `README.md` : documenter l'objectif du rôle, les variables configurables, les exemples d'utilisation et les instructions de test.
 - `SECURITY.md` : instructions pour signaler des vulnérabilités de sécurité.
 
-## Règles générales
+## RÈGLES GENÉRALES
 
 - Répondre en français.
 - Prioriser la clarté et la maintenabilité. Préfère des changements incrémentaux testés.
@@ -52,19 +52,19 @@ Ce dépôt contient un rôle Ansible destiné à installer et configurer un temp
 - Performance : éviter les boucles inutiles et optimiser les tâches pour réduire le temps d'exécution.
 - Effectuer des tests locaux avant de proposer des modifications.
 
-## Compatibilité multi-plateforme
+## COMPATIBILITÉ PLATEFORME
 
 - Générer pour les plateformes : rockylinux 9, ubuntu noble et debian trixie
 - Si une tâche dépend d'une distribution, isoler la logique dans `tasks/setup-<Distro>.yml` et conditionner l'inclusion via `ansible_os_family` ou `ansible_distribution`.
 - Les images utilisées dans `molecule/default/molecule.yml` doivent refléter les plateformes supportées.
 
-## Conventions de commit
+## COMMITS ET MESSAGES
 
 - Utiliser des messages de commit clairs et descriptifs.
 - Préfixer les messages de commit avec le type de changement (fix, feat, docs, style, refactor, test, chore).
 - Inclure des références aux issues ou PRs pertinentes dans les messages de commit.
 
-## Correctif ou une nouvelle fonctionnalité
+## CONTRIBUTIONS ET PULL REQUESTS
 
 - Fournir directement les modifications de fichiers sous forme de patchs ou d'édits (si intégré au repo), pas seulement des instructions textuelles.
 - Avant d'appliquer un patch qui change plus de 3 fichiers, lister les fichiers concernés et demander confirmation.
@@ -72,35 +72,36 @@ Ce dépôt contient un rôle Ansible destiné à installer et configurer un temp
 - Fournir un court résumé (2-4 lignes) expliquant le problème et la solution.
 - Montrer les fichiers modifiés et un extrait des changements clés (bloc YAML/Ansible) dans la PR description.
 
-## Documentation
+## DOCUMENTATION
 
 - Mettre à jour `README.md` et autres documents pertinents pour refléter les changements.
 - Chaque variable doit être documentée avec un commentaire expliquant son usage.
 
-## Gestion des versions
+## CHANGELOG
 
 - Suivre le versionnage sémantique dans `CHANGELOG.md` et les tags Git.
 - Mettre à jour le changelog pour chaque version avec les changements majeurs, mineurs et corrections de bugs.
 - Documenter les nouvelles fonctionnalités, corrections de bugs et changements importants dans le changelog.
+- Ordrer chronologiquement avec la version la plus récente en haut.
 
-## Logging et débogage
+## LOGGING ET DEBUGGING
 
 - Gestion des erreurs : inclure des vérifications et des messages d'erreur utiles.
 - Logging : utiliser le module debug pour fournir des informations utiles lors de l'exécution.
 
-## Qualité du code 
+## QUALITE DU CODE 
 
 - Lisibilité : utiliser des noms de variables et de tâches clairs et descriptifs.
 - Modularité : diviser les tâches complexes en sous-tâches dans des fichiers séparés si nécessaire.
 - Exécuter `ansible-lint .` pour vérifier la syntaxe et les bonnes pratiques Ansible.
 - Exécuter `yamllint .` pour vérifier la syntaxe YAML.
 
-## Sécurité
+## SECURITE
 
 - Eviter d'exposer des secrets dans le dépôt. 
 - Si une tâche a besoin d'un secret, documenter clairement comment fournir la valeur via Vault, variables d'environnement, ou inventory.
 
-## Tests
+## TESTS MOLECULE
 
 - Exécuter molecule : `molecule test` pour valider les modifications.
 - Génnérer des tests Molecule basiques (vérification d'un service, présence d'un binaire, groupe d'utilisateurs, etc.).
@@ -115,6 +116,6 @@ Ce dépôt contient un rôle Ansible destiné à installer et configurer un temp
     - `lacrif/debian-systemd:trixie` pour Debian 13 avec systemd.
 - Utiliser la collection Ansible `hpe.monkeyble` pour mocker des modules non compatibles avec le mode check.
 
-## Notes finales
+## NOTES FINALES
 
 Merci de respecter ces consignes chaque fois que tu contribues au dépôt.
